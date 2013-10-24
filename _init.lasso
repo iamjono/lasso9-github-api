@@ -1,8 +1,8 @@
 [
 	sys_listunboundmethods !>> 'br' ? define br => '<br>'
-	sys_listtraits !>> 'github_common' ? include('github_common.lasso')
-	sys_listtypes !>> 'github_user' ? include('github_user.lasso')
-	sys_listtypes !>> 'github_repos' ? include('github_repos.lasso')
+	sys_listtraits !>> 'github_common' ? include('types/github_common.lasso')
+	sys_listtypes !>> 'github_user' ? include('types/github_user.lasso')
+	sys_listtypes !>> 'github_repos' ? include('types/github_repos.lasso')
 	
 	local(
 		activity = array(
@@ -49,12 +49,12 @@
 			'github_pulls'
 		)
 	)
-//	with f in #activity do => { 		sys_listtypes !>> #f ? include('activity/'+#f+'.lasso') 		}
-//	with f in #gists do => { 			sys_listtypes !>> #f ? include('gists/'+#f+'.lasso') 			}
-//	with f in #gitdata do => { 			sys_listtypes !>> #f ? include('gitdata/'+#f+'.lasso') 			}
-//	with f in #issues do => { 			sys_listtypes !>> #f ? include('issues/'+#f+'.lasso') 			}
-//	with f in #miscellaneous do => { 	sys_listtypes !>> #f ? include('miscellaneous/'+#f+'.lasso') 	}
-//	with f in #orgs do => { 			sys_listtypes !>> #f ? include('orgs/'+#f+'.lasso') 			}
-//	with f in #pulls do => { 			sys_listtypes !>> #f ? include('pulls/'+#f+'.lasso') 			}
+//	with f in #activity do => { 		sys_listtypes !>> #f ? include('types/activity/'+#f+'.lasso') 		}
+//	with f in #gists do => { 			sys_listtypes !>> #f ? include('types/gists/'+#f+'.lasso') 			}
+//	with f in #gitdata do => { 			sys_listtypes !>> #f ? include('types/gitdata/'+#f+'.lasso') 			}
+//	with f in #issues do => { 			sys_listtypes !>> #f ? include('types/issues/'+#f+'.lasso') 			}
+//	with f in #miscellaneous do => { 	sys_listtypes !>> #f ? include('types/miscellaneous/'+#f+'.lasso') 	}
+//	with f in #orgs do => { 			sys_listtypes !>> #f ? include('types/orgs/'+#f+'.lasso') 			}
+//	with f in #pulls do => { 			sys_listtypes !>> #f ? include('types/pulls/'+#f+'.lasso') 			}
 	
 ]
