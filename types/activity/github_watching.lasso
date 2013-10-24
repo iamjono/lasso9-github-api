@@ -24,7 +24,7 @@
 define github_watching => type {
 	trait { import github_common }	
 	data
-		protected prefix::string	= 'watching_',
+		protected prefix::string	= 'result_',
 		protected u::string 		= string,
 		protected p::string 		= 'x-oauth-basic',
 		public user::string			= '',

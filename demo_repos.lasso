@@ -37,11 +37,11 @@
 	#repos->get
 	br+'url: '+#repos->url
 	br+'# repos: '+#repos->size
-	br+'default, first full_name: '+#repos->repos_full_name
+	br+'default, first full_name: '+#repos->result_full_name
 	br
 	
 	loop(#repos->size) => {^
-		br+loop_count+': full_name: '+#repos->repos_full_name(loop_count)
+		br+loop_count+': full_name: '+#repos->result_full_name(loop_count)
 	^}
 
 	/* =======================================================
@@ -52,11 +52,11 @@
 	#repos->get(-org='LassoSoft')
 	br+'url: '+#repos->url
 	br+br+br+'# repos: '+#repos->size
-	br+'default, first full_name: '+#repos->repos_full_name
+	br+'default, first full_name: '+#repos->result_full_name
 	br
 	
 	loop(#repos->size) => {^
-		br+loop_count+': full_name: '+#repos->repos_full_name(loop_count)
+		br+loop_count+': full_name: '+#repos->result_full_name(loop_count)
 	^}
 //	
 //	
