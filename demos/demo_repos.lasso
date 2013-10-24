@@ -1,12 +1,9 @@
 [
 	define br => '<br>'
-	sys_listtraits !>> 'github_common' ? 
-		include('github_common.lasso')
-	sys_listtypes !>> 'github_user' ? 
-		include('github_user.lasso')
+	sys_listtraits !>> 'github_common' ? include('../types/github_common.lasso')
+	sys_listtypes !>> 'github_user' ? include('../types/github_user.lasso')
 
-	sys_listtypes !>> 'github_repos' ? 
-		include('github_repos.lasso')
+	sys_listtypes !>> 'github_repos' ? include('../types/github_repos.lasso')
 	
 
 	
