@@ -11,7 +11,7 @@ define github_emojis => type {
 		protected u::string 		= string,
 		protected p::string 		= 'x-oauth-basic',
 		public user::string			= '',
-		public objectdata::array	= array,
+		public objectdata::map	= map,
 		public headers,
 		public url::string			= string
 		
