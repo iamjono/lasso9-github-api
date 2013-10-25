@@ -12,7 +12,7 @@ define github_emojis => type {
 		protected p::string 		= 'x-oauth-basic',
 		public user::string			= '',
 		public objectdata::map	= map,
-		public headers,
+		public headers				= github_header,
 		public url::string			= string
 		
 	// standard get method
@@ -24,7 +24,7 @@ define github_emojis => type {
 			local(r = curl('https://api.github.com/emojis'))
 			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
 			.objectdata = json_deserialize(#r->result)
-			.headers = #r->header->split('\r\n')
+			.headers->process(#r->header)
 		}
 	}
 }

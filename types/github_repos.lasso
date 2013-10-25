@@ -10,7 +10,7 @@ define github_repos => type {
 		protected p::string 		= 'x-oauth-basic',
 		public user::string			= '',
 		public objectdata::array	= array,
-		public headers,
+		public headers				= github_header,
 		public url::string			= string
 
 	// standard get method
@@ -52,7 +52,8 @@ define github_repos => type {
 			local(res = json_deserialize(#r->result))
 			#res->isA(::map) ? .objectdata = array(#res) 
 			#res->isA(::array) ? .objectdata = #res
-			.headers = #r->header->split('\r\n')
+			.headers->process(#r->header)
+//			return #r->header->split('\r\n')
 		}
 	}
 	public size => .objectdata->size
@@ -124,7 +125,7 @@ define github_repos => type {
 		local(res = json_deserialize(#r->result))
 		#res->isA(::map) ? .objectdata = array(#res) 
 		#res->isA(::array) ? .objectdata = #res
-		.headers = #r->header->split('\r\n')
+		.headers->process(#r->header)
 	} // end create
 	
 	/* ===============================
@@ -150,7 +151,7 @@ define github_repos => type {
 			local(res = json_deserialize(#r->result))
 			#res->isA(::map) ? .objectdata = array(#res) 
 			#res->isA(::array) ? .objectdata = #res
-			.headers = #r->header->split('\r\n')
+			.headers->process(#r->header)
 		}
 	}
 
@@ -202,13 +203,14 @@ define github_repos => type {
 		=========================================================== */
 		local(url = 'https://api.github.com/'+#urlstring->join('/'))
 		.url = #url
+		local(r = curl(#url))
 		.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
 		#r->set(CURLOPT_CUSTOMREQUEST, 'PATCH')
 		#r->set(CURLOPT_POSTFIELDS, json_serialize(#outmap))
 		local(res = json_deserialize(#r->result))
 		#res->isA(::map) ? .objectdata = array(#res) 
 		#res->isA(::array) ? .objectdata = #res
-		.headers = #r->header->split('\r\n')
+		.headers->process(#r->header)
 	}
 
 	private lists(urlstring::array, params::array) => {
@@ -220,7 +222,7 @@ define github_repos => type {
 		local(res = json_deserialize(#r->result))
 		#res->isA(::map) ? .objectdata = array(#res) 
 		#res->isA(::array) ? .objectdata = #res
-		.headers = #r->header->split('\r\n')
+		.headers->process(#r->header)
 	}
 	
 	/* ===============================
@@ -329,7 +331,7 @@ define github_repos => type {
 		protect => {
 			handle_error => { return error_msg+'<pre>'+error_stack+'</pre>' }
 			local(urlstring = array('repos',#owner,#repo))			
-			local(url = 'https://api.github.com/'+#urlstring->join('/')+(#params->size ? '?'+#params->join('&')))
+			local(url = 'https://api.github.com/'+#urlstring->join('/'))
 			.url = #url
 			local(r = curl(#url))
 			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
@@ -337,7 +339,7 @@ define github_repos => type {
 			local(res = json_deserialize(#r->result))
 			#res->isA(::map) ? .objectdata = array(#res) 
 			#res->isA(::array) ? .objectdata = #res
-			.headers = #r->header->split('\r\n')
+			.headers->process(#r->header)
 		}
 	}
 

@@ -66,5 +66,6 @@ define github_common => trait {
 		}
 		return .getobjectdata(#n,#num)
 	}
+
 }
 ]

@@ -18,7 +18,7 @@ define github_gitignore => type {
 		protected p::string 		= 'x-oauth-basic',
 		public user::string			= '',
 		public objectdata::map		= map,
-		public headers,
+		public headers				= github_header,
 		public url::string			= string
 
 	/* ================================================================
@@ -34,7 +34,7 @@ define github_gitignore => type {
 			local(r = curl('https://api.github.com/gitignore/templates'))
 			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
 			.objectdata->insert('templates' = json_deserialize(#r->result))
-			.headers = #r->header->split('\r\n')
+			.headers->process(#r->header)
 		}
 	}
 	/* ================================================================
@@ -49,7 +49,7 @@ define github_gitignore => type {
 			local(r = curl('https://api.github.com/gitignore/templates/'+#template))
 			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
 			.objectdata = json_deserialize(#r->result)
-			.headers = #r->header->split('\r\n')
+			.headers->process(#r->header)
 		}
 	}
 }

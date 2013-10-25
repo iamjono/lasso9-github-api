@@ -22,7 +22,7 @@ define github_gistcomments => type {
 		protected p::string 		= 'x-oauth-basic',
 		public user::string			= '',
 		public objectdata::array	= array,
-		public headers,
+		public headers				= github_header,
 		public url::string			= string
 
 

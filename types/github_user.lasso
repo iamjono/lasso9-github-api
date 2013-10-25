@@ -6,8 +6,8 @@ define github_user => type {
 		protected u::string 		= string,
 		protected p::string 		= 'x-oauth-basic',
 		public user::string			= '',
-		public objectdata:: map	= map,
-		public headers
+		public objectdata::map		= map,
+		public headers				= github_header
 
 	// standard get method
 	public get(method::string,user::string) => {
@@ -22,7 +22,7 @@ define github_user => type {
 			local(r = curl('https://api.github.com/'+#urlstring->join('/')))
 			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
 			.objectdata = json_deserialize(#r->result)
-			.headers = #r->header->split('\r\n')
+			.headers->process(#r->header)
 		}
 	}
 	
@@ -57,7 +57,7 @@ define github_user => type {
 		#r->set(CURLOPT_CUSTOMREQUEST, 'PATCH')
 		#r->set(CURLOPT_POSTFIELDS, json_serialize(#outmap))
 		.objectdata = json_deserialize(#r->result)
-		.headers = #r->header->split('\r\n')
+		.headers->process(#r->header)
 	}
 	
 }
