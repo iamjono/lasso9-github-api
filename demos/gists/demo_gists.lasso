@@ -74,7 +74,7 @@
 //	Update a user property
 //	======================================================= */
 ////	'Update a user property'+br
-////	#user->token('5ea2f6263ba7364cb187ae677f3647f4a10b7e74')
+////	#user->token('5ea2f6263ba7364cb187ae677f3647f4a10b7e74') // not the token BTW, it's random text!
 ////	#user->update(-location='Newmarket, Canada')
 ////	#user->user_location
 //	
