@@ -12,6 +12,7 @@ define github_common => trait {
 			.p = 'x-oauth-basic'
 		}
 	}
+	provide size() => { return .objectdata->size }
 			
 	// returns a formatted name/value pair for the properties
 	// useful for debug
