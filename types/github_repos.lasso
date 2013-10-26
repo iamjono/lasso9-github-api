@@ -50,7 +50,6 @@ define github_repos => type {
 //			return #r->header->split('\r\n')
 		}
 	}
-	public size => .objectdata->size
 	
 	/* ===================================================
 	CREATE REPOS 
