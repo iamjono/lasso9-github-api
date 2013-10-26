@@ -1,8 +1,19 @@
 [
 	sys_listunboundmethods !>> 'br' ? define br => '<br>'
+	
+	// common trait element
 	sys_listtraits !>> 'github_common' ? include('types/github_common.lasso')
+	
+	// header type
 	sys_listtypes !>> 'github_header' ? include('types/github_header.lasso')
+
+	// parent object
+	sys_listtraits !>> 'github_parent' ? include('types/github_parent.lasso')
+	
+	// user object
 	sys_listtypes !>> 'github_user' ? include('types/github_user.lasso')
+	
+	// repos object
 	sys_listtypes !>> 'github_repos' ? include('types/github_repos.lasso')
 	
 	local(
