@@ -42,28 +42,11 @@ define github_common => trait {
 	provide _unknownTag(...) => {
 		local(n = method_name->asString)
 		#n->removeLeading(.prefix)
-//		local(params = map)
 		local(num = 1)
 		if(#rest->isNotA(::void)) => {
 			protect => {
 				#num = #rest->first
-			}
-		
-//			with i in #rest do => {
-//				match(#i->type) => {
-//					case(::pair,::keyword)
-//						#params->insert(#i->name=#i->value)
-//					case(::array)
-//						#params->insertfrom(#i)
-//					case(::map)
-//						with key in #i->keys do => {
-//							#params->insert(
-//								#key = #i->find(#key)
-//							)
-//						}
-//	       			}
-//				
-//			}
+			}	
 		}
 		return .getobjectdata(#n,#num)
 	}
