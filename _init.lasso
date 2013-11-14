@@ -1,6 +1,10 @@
 [
 	sys_listunboundmethods !>> 'br' ? define br => '<br>'
 	
+	// http_request and http_response objects
+	sys_listtypes !>> 'http_request' ? include('Lasso-HTTP/http_request.lasso')
+	sys_listtypes !>> 'http_response' ? include('Lasso-HTTP/http_response.lasso')
+	
 	// common trait element
 	sys_listtraits !>> 'github_common' ? include('types/github_common.lasso')
 	
