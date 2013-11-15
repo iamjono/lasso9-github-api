@@ -14,10 +14,16 @@ define github_user => type {
 			#user->size ? .user = #user
 			
 			// run query
-			local(r = curl('https://api.github.com/'+#urlstring->join('/')))
-			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-			.objectdata = json_deserialize(#r->result)
-			.headers->process(#r->header)
+			local(resp = http_request(
+				'https://api.github.com/'+#urlstring->join('/'),
+				-username=.u,
+				-password=.p,
+				-basicAuthOnly=true
+				)->response
+			)
+			.objectdata = json_deserialize(#resp->body->asString)
+			.headers = #resp->headers
+
 		}
 	}
 	
@@ -47,12 +53,27 @@ define github_user => type {
 		Push the PATCH via JSON and get the new data
 		can't use .run because of custom...
 		=========================================================== */
-		local(r = curl('https://api.github.com/user'))
-		.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-		#r->set(CURLOPT_CUSTOMREQUEST, 'PATCH')
-		#r->set(CURLOPT_POSTFIELDS, json_serialize(#outmap))
-		.objectdata = json_deserialize(#r->result)
-		.headers->process(#r->header)
+//		local(r = curl('https://api.github.com/user'))
+//		.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
+//		#r->set(CURLOPT_CUSTOMREQUEST, 'PATCH')
+//		#r->set(CURLOPT_POSTFIELDS, json_serialize(#outmap))
+//		.objectdata = json_deserialize(#r->result)
+//		.headers->process(#r->header)
+		
+		// run query
+		local(resp = http_request(
+			'https://api.github.com/user',
+			-username=.u,
+			-password=.p,
+			-basicAuthOnly=true,
+			-postParams=json_serialize(#outmap),
+			-reqMethod='PATCH'
+			)->response
+		)
+		.objectdata = json_deserialize(#resp->body->asString)
+		.headers = #resp->headers
+
+		
 	}
 	
 }
