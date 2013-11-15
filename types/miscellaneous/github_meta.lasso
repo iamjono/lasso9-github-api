@@ -28,9 +28,6 @@ define github_meta => type {
 	
 	public onCreate() => {
 		// run query
-		local(r = curl('https://api.github.com/meta'))
-		.objectdata = json_deserialize(#r->result)
-		.headers->process(#r->header)
 		
 		local(resp = http_request('https://api.github.com/meta')->response)
 		.objectdata = json_deserialize(#resp->body->asString)
