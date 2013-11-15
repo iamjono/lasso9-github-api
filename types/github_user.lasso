@@ -53,12 +53,6 @@ define github_user => type {
 		Push the PATCH via JSON and get the new data
 		can't use .run because of custom...
 		=========================================================== */
-//		local(r = curl('https://api.github.com/user'))
-//		.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-//		#r->set(CURLOPT_CUSTOMREQUEST, 'PATCH')
-//		#r->set(CURLOPT_POSTFIELDS, json_serialize(#outmap))
-//		.objectdata = json_deserialize(#r->result)
-//		.headers->process(#r->header)
 		
 		// run query
 		local(resp = http_request(
