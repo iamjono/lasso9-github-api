@@ -12,6 +12,6 @@ Jono
 jono@guthrie.net.nz
 
 Lasso-HTTP
-==========
+----------
 This client API makes extensive use of Lasso-HTTP (https://github.com/bfad/Lasso-HTTP) from Brad Lindsay. 
 A huge thanks to Brad for providing a great library to simplify the handling of cURL requests and responses.
