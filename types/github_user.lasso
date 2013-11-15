@@ -2,6 +2,7 @@
 define github_user => type {
 	parent github_parent
 	data
+		protected prefix::string	= 'user_',
 		public objectdata::map		= map
 
 	// standard get method
