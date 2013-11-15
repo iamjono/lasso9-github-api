@@ -19,6 +19,7 @@ define github_parent => type {
 	protected simple_get() => {
 		protect => {
 			handle_error => { return error_msg+'<pre>'+error_stack+'</pre>' }
+//			log_critical(.u + ' | ' + .p)
 			// run query
 			local(resp = http_request(
 				.url,
