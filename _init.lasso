@@ -2,23 +2,23 @@
 	sys_listunboundmethods !>> 'br' ? define br => '<br>'
 	
 	// http_request and http_response objects
-	sys_listtypes !>> 'http_request' ? include('Lasso-HTTP/http_request.lasso')
-	sys_listtypes !>> 'http_response' ? include('Lasso-HTTP/http_response.lasso')
+	sys_listtypes !>> 'http_request' ? lassoapp_include('Lasso_HTTP/http_request.lasso')
+	sys_listtypes !>> 'http_response' ? lassoapp_include('Lasso_HTTP/http_response.lasso')
 	
 	// common trait element
-	sys_listtraits !>> 'github_common' ? include('types/github_common.lasso')
+	sys_listtraits !>> 'github_common' ? lassoapp_include('types/github_common.lasso')
 	
 	// header type
-	sys_listtypes !>> 'github_header' ? include('types/github_header.lasso')
+	sys_listtypes !>> 'github_header' ? lassoapp_include('types/github_header.lasso')
 
 	// parent object
-	sys_listtraits !>> 'github_parent' ? include('types/github_parent.lasso')
+	sys_listtraits !>> 'github_parent' ? lassoapp_include('types/github_parent.lasso')
 	
 	// user object
-	sys_listtypes !>> 'github_user' ? include('types/github_user.lasso')
+	sys_listtypes !>> 'github_user' ? lassoapp_include('types/github_user.lasso')
 	
 	// repos object
-	sys_listtypes !>> 'github_repos' ? include('types/github_repos.lasso')
+	sys_listtypes !>> 'github_repos' ? lassoapp_include('types/github_repos.lasso')
 	
 	local(
 		activity = array(
@@ -65,12 +65,12 @@
 			'github_pulls'
 		)
 	)
-//	with f in #activity do => { 		sys_listtypes !>> #f ? include('types/activity/'+#f+'.lasso') 		}
-//	with f in #gists do => { 			sys_listtypes !>> #f ? include('types/gists/'+#f+'.lasso') 			}
-//	with f in #gitdata do => { 			sys_listtypes !>> #f ? include('types/gitdata/'+#f+'.lasso') 			}
-//	with f in #issues do => { 			sys_listtypes !>> #f ? include('types/issues/'+#f+'.lasso') 			}
-//	with f in #miscellaneous do => { 	sys_listtypes !>> #f ? include('types/miscellaneous/'+#f+'.lasso') 	}
-//	with f in #orgs do => { 			sys_listtypes !>> #f ? include('types/orgs/'+#f+'.lasso') 			}
-//	with f in #pulls do => { 			sys_listtypes !>> #f ? include('types/pulls/'+#f+'.lasso') 			}
+	with f in #activity do => { 		sys_listtypes !>> #f ? lassoapp_include('types/activity/'+#f+'.lasso') 		}
+	with f in #gists do => { 			sys_listtypes !>> #f ? lassoapp_include('types/gists/'+#f+'.lasso') 			}
+	with f in #gitdata do => { 			sys_listtypes !>> #f ? lassoapp_include('types/gitdata/'+#f+'.lasso') 			}
+	with f in #issues do => { 			sys_listtypes !>> #f ? lassoapp_include('types/issues/'+#f+'.lasso') 			}
+	with f in #miscellaneous do => { 	sys_listtypes !>> #f ? lassoapp_include('types/miscellaneous/'+#f+'.lasso') 	}
+	with f in #orgs do => { 			sys_listtypes !>> #f ? lassoapp_include('types/orgs/'+#f+'.lasso') 			}
+	with f in #pulls do => { 			sys_listtypes !>> #f ? lassoapp_include('types/pulls/'+#f+'.lasso') 			}
 	
 ]

@@ -1,6 +1,5 @@
 [
 	sys_listunboundmethods !>> 'br' ? define br => '<br>'
-	define br => '<br>'
 	sys_listtraits !>> 'github_common' ? 
 		include('../../types/github_common.lasso')
 	
