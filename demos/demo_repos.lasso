@@ -12,7 +12,7 @@
 	sys_listtypes !>> 'github_user' ? 
 		include('../types/github_user.lasso')
 	
-	sys_listtypes !>> 'github_repos' ? 
+//	sys_listtypes !>> 'github_repos' ? 
 		include('../types/github_repos.lasso')
 	
 
@@ -21,6 +21,7 @@
 	
 	/* =======================================================
 	Get info about a specified user
+	======================================================= */
 	'Get info about a specified users repos'+br
 //	#repos->get(-user='fletc3her')
 	#repos->get(-user='zeroloop',-sort='created')
@@ -30,11 +31,10 @@
 	// output the whole array for debug
 	'<pre>'+#repos->objectdata+'</pre>'
 	
-//	br+'full_name: '+#repos->repos_full_name
+	br+'full_name: '+#repos->repos_full_name
 	loop(#repos->size) => {^
 		br+loop_count+': full_name: '+#repos->repos_full_name(loop_count)
 	^}
-	======================================================= */
 
 	/* =======================================================
 	Get the authenticated user
@@ -81,6 +81,6 @@
 	'Headers:'+br
 	#repos->headers
 	br+br
-	'X-RateLimit-Remaining = ' + #repos->headers->'X-RateLimit-Remaining'
+//	'X-RateLimit-Remaining = ' + #repos->headers->'X-RateLimit-Remaining'
 	
 ]

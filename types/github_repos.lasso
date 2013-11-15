@@ -5,6 +5,7 @@
 define github_repos => type {
 	parent github_parent
 	data
+		protected prefix::string		= 'repos_',
 		public objectdata::array		= array
 
 	// standard get method
@@ -39,15 +40,33 @@ define github_repos => type {
 			}
 			
 			// run query
+//			local(url = 'https://api.github.com/'+#urlstring->join('/')+'/repos'+(#params->size ? '?'+#params->join('&')))
+//			.url = #url
+//			local(r = curl(#url))
+//			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
+//			local(res = json_deserialize(#r->result))
+//			#res->isA(::map) ? .objectdata = array(#res) 
+//			#res->isA(::array) ? .objectdata = #res
+//			.headers->process(#r->header)
+			
+			// run query
 			local(url = 'https://api.github.com/'+#urlstring->join('/')+'/repos'+(#params->size ? '?'+#params->join('&')))
 			.url = #url
-			local(r = curl(#url))
-			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-			local(res = json_deserialize(#r->result))
+			local(resp = http_request(
+				.url,
+				-username=.u,
+				-password=.p,
+				-basicAuthOnly=true
+				)->response
+			)
+			local(res = json_deserialize(#resp->body->asString))
 			#res->isA(::map) ? .objectdata = array(#res) 
 			#res->isA(::array) ? .objectdata = #res
-			.headers->process(#r->header)
-//			return #r->header->split('\r\n')
+
+			.headers = #resp->headers
+
+			
+			
 		}
 	}
 	
@@ -112,13 +131,31 @@ define github_repos => type {
 		Push the PATCH via JSON and get the new data
 		can't use .run because of custom...
 		=========================================================== */
-		#org->size ? local(r = curl('https://api.github.com/orgs/'+#org+'/repos')) | local(r = curl('https://api.github.com/user/repos'))
-		.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-		#r->set(CURLOPT_POSTFIELDS, json_serialize(#outmap))
-		local(res = json_deserialize(#r->result))
+//		#org->size ? local(r = curl('https://api.github.com/orgs/'+#org+'/repos')) | local(r = curl('https://api.github.com/user/repos'))
+//		.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
+//		#r->set(CURLOPT_POSTFIELDS, json_serialize(#outmap))
+//		local(res = json_deserialize(#r->result))
+//		#res->isA(::map) ? .objectdata = array(#res) 
+//		#res->isA(::array) ? .objectdata = #res
+//		.headers->process(#r->header)
+		
+		#org->size ? .url = 'https://api.github.com/orgs/'+#org+'/repos' | .url = 'https://api.github.com/user/repos'
+		// run query
+		local(resp = http_request(
+			.url,
+			-username=.u,
+			-password=.p,
+			-basicAuthOnly=true,
+			-postParams=json_serialize(#outmap)
+			)->response
+		)
+		local(res = json_deserialize(#resp->body->asString))
 		#res->isA(::map) ? .objectdata = array(#res) 
 		#res->isA(::array) ? .objectdata = #res
-		.headers->process(#r->header)
+
+		.headers = #resp->headers
+		
+		
 	} // end create
 	
 	/* ===============================
@@ -137,14 +174,30 @@ define github_repos => type {
 			#urlstring->insert(#repo)
 			
 			// run query
+//			local(url = 'https://api.github.com/'+#urlstring->join('/'))
+//			.url = #url
+//			local(r = curl(#url))
+//			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
+//			local(res = json_deserialize(#r->result))
+//			#res->isA(::map) ? .objectdata = array(#res) 
+//			#res->isA(::array) ? .objectdata = #res
+//			.headers->process(#r->header)
+			
+			// run query
 			local(url = 'https://api.github.com/'+#urlstring->join('/'))
 			.url = #url
-			local(r = curl(#url))
-			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-			local(res = json_deserialize(#r->result))
+			local(resp = http_request(
+				.url,
+				-username=.u,
+				-password=.p,
+				-basicAuthOnly=true
+				)->response
+			)
+			local(res = json_deserialize(#resp->body->asString))
 			#res->isA(::map) ? .objectdata = array(#res) 
 			#res->isA(::array) ? .objectdata = #res
-			.headers->process(#r->header)
+
+			.headers = #resp->headers
 		}
 	}
 
@@ -194,28 +247,62 @@ define github_repos => type {
 		Push the PATCH via JSON and get the new data
 		can't use .run because of custom...
 		=========================================================== */
+//		local(url = 'https://api.github.com/'+#urlstring->join('/'))
+//		.url = #url
+//		local(r = curl(#url))
+//		.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
+//		#r->set(CURLOPT_CUSTOMREQUEST, 'PATCH')
+//		#r->set(CURLOPT_POSTFIELDS, json_serialize(#outmap))
+//		local(res = json_deserialize(#r->result))
+//		#res->isA(::map) ? .objectdata = array(#res) 
+//		#res->isA(::array) ? .objectdata = #res
+//		.headers->process(#r->header)
+		
+		// run query
 		local(url = 'https://api.github.com/'+#urlstring->join('/'))
 		.url = #url
-		local(r = curl(#url))
-		.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-		#r->set(CURLOPT_CUSTOMREQUEST, 'PATCH')
-		#r->set(CURLOPT_POSTFIELDS, json_serialize(#outmap))
-		local(res = json_deserialize(#r->result))
-		#res->isA(::map) ? .objectdata = array(#res) 
-		#res->isA(::array) ? .objectdata = #res
-		.headers->process(#r->header)
+		local(resp = http_request(
+			.url,
+			-username=.u,
+			-password=.p,
+			-basicAuthOnly=true,
+			-postParams=json_serialize(#outmap),
+			-reqMethod='PATCH'
+			)->response
+		)
+		.objectdata = json_deserialize(#resp->body->asString)
+		.headers = #resp->headers
+
+		
+		
 	}
 
 	private lists(urlstring::array, params::array) => {
 		// run query
+//		local(url = 'https://api.github.com/'+#urlstring->join('/')+(#params->size ? '?'+#params->join('&')))
+//		.url = #url
+//		local(r = curl(#url))
+//		.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
+//		local(res = json_deserialize(#r->result))
+//		#res->isA(::map) ? .objectdata = array(#res) 
+//		#res->isA(::array) ? .objectdata = #res
+//		.headers->process(#r->header)
+		
+		// run query
 		local(url = 'https://api.github.com/'+#urlstring->join('/')+(#params->size ? '?'+#params->join('&')))
 		.url = #url
-		local(r = curl(#url))
-		.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-		local(res = json_deserialize(#r->result))
-		#res->isA(::map) ? .objectdata = array(#res) 
-		#res->isA(::array) ? .objectdata = #res
-		.headers->process(#r->header)
+		local(resp = http_request(
+			.url,
+			-username=.u,
+			-password=.p,
+			-basicAuthOnly=true
+			)->response
+		)
+		.objectdata = json_deserialize(#resp->body->asString)
+		.headers = #resp->headers
+
+
+		
 	}
 	
 	/* ===============================
@@ -323,17 +410,47 @@ define github_repos => type {
 		) => {
 		protect => {
 			handle_error => { return error_msg+'<pre>'+error_stack+'</pre>' }
-			local(urlstring = array('repos',#owner,#repo))			
+			local(urlstring = array('repos',#owner,#repo))		
+				
+//			local(url = 'https://api.github.com/'+#urlstring->join('/'))
+//			.url = #url
+//			local(r = curl(#url))
+//			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
+//			#r->set(CURLOPT_CUSTOMREQUEST, 'DELETE')
+//			local(res = json_deserialize(#r->result))
+//			#res->isA(::map) ? .objectdata = array(#res) 
+//			#res->isA(::array) ? .objectdata = #res
+//			.headers->process(#r->header)
+			
+		// run query
 			local(url = 'https://api.github.com/'+#urlstring->join('/'))
 			.url = #url
-			local(r = curl(#url))
-			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-			#r->set(CURLOPT_CUSTOMREQUEST, 'DELETE')
-			local(res = json_deserialize(#r->result))
-			#res->isA(::map) ? .objectdata = array(#res) 
-			#res->isA(::array) ? .objectdata = #res
-			.headers->process(#r->header)
+			local(resp = http_request(
+				.url,
+				-username=.u,
+				-password=.p,
+				-basicAuthOnly=true,
+				-reqMethod='DELETE'
+				)->response
+			)
+			.objectdata = json_deserialize(#resp->body->asString)
+			.headers = #resp->headers
+			
 		}
+	}
+	// allows lookups by property directly
+	public _unknownTag(...) => {
+		local(n = method_name->asString)
+		#n->removeLeading(.prefix)
+		local(num = 1)
+		if(#rest->isNotA(::void)) => {
+			protect => {
+				#num = #rest->first
+			}	
+		}
+//		return .prefix
+//		return ('wanting '+#n+', '+#num)
+		return .getobjectdata(#n,#num)
 	}
 
 	
