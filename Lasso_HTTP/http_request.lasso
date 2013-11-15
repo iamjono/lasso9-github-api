@@ -1,3 +1,4 @@
+[
 define http_request => type {
     data
         private curl,
@@ -128,8 +129,9 @@ define http_request => type {
         local(curl) = curl(.url)
 
         // Set cURL authentication options
-        if(.username != '') => {
+        if(.username->size) => {
             #curl->set(CURLOPT_USERPWD, .username + ':' + .password)
+            log_critical(.username + ':' + .password)
             
             .basicAuthOnly
                 ? #curl->set(CURLOPT_HTTPAUTH, CURLAUTH_BASIC)
@@ -192,3 +194,4 @@ define http_request => type {
         .`curl` = #curl
     }
 }
+]
