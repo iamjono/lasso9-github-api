@@ -15,10 +15,16 @@ define github_emojis => type {
 			handle_error => { return error_msg }
 			
 			// run query
-			local(r = curl('https://api.github.com/emojis'))
-			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-			.objectdata = json_deserialize(#r->result)
-			.headers->process(#r->header)
+			local(resp = http_request(
+				'https://api.github.com/emojis',
+				-username=.u,
+				-password=.p,
+				-basicAuthOnly=true
+				)->response
+			)
+			.objectdata = json_deserialize(#resp->body->asString)
+			.headers = #resp->headers
+
 		}
 	}
 }
