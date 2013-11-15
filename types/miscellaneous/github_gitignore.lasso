@@ -23,12 +23,19 @@ define github_gitignore => type {
 	public list() => {
 		protect => {
 			handle_error => { return error_msg }
-			
+						
 			// run query
-			local(r = curl('https://api.github.com/gitignore/templates'))
-			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-			.objectdata->insert('templates' = json_deserialize(#r->result))
-			.headers->process(#r->header)
+			local(resp = http_request(
+				'https://api.github.com/gitignore/templates',
+				-username=.u,
+				-password=.p,
+				-basicAuthOnly=true
+				)->response
+			)
+			.objectdata->insert('templates' = json_deserialize(#resp->body->asString))
+			.headers = #resp->headers
+
+			
 		}
 	}
 	/* ================================================================
@@ -40,10 +47,18 @@ define github_gitignore => type {
 		protect => {
 			handle_error => { return error_msg }
 			// run query
-			local(r = curl('https://api.github.com/gitignore/templates/'+#template))
-			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-			.objectdata = json_deserialize(#r->result)
-			.headers->process(#r->header)
+			local(resp = http_request(
+				'https://api.github.com/gitignore/templates/'+#template,
+				-username=.u,
+				-password=.p,
+				-basicAuthOnly=true
+				)->response
+			)
+			.objectdata = json_deserialize(#resp->body->asString)
+			.headers = #resp->headers
+
+			
+			
 		}
 	}
 }
