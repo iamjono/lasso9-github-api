@@ -74,16 +74,23 @@ define github_gists => type {
 			// since here 
 			//#since->size ? #params->insert('since='+#since+'Z') 
 			
+
 			// run query
 			local(url = 'https://api.github.com/'+#urlstring->join('/')+(#params->size ? '?'+#params->join('&')))
 			.url = #url
-			local(r = curl(#url))
-			.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-			local(res = json_deserialize(#r->result))
+			local(resp = http_request(
+				.url,
+				-username=.u,
+				-password=.p,
+				-basicAuthOnly=true
+				)->response
+			)
+			local(res = json_deserialize(#resp->body->asString))
 			#res->isA(::map) ? .objectdata = array(#res) 
 			#res->isA(::array) ? .objectdata = #res
-			.headers->process(#r->header)
-//			return #r->header->split('\r\n')
+			.headers = #resp->headers
+
+
 		}
 	}
 
