@@ -22,7 +22,7 @@
 	======================================================= */
 	local(user = github_user)
 	'Get the authenticated user'+br
-	#user->token(github_key) // not the token BTW, it's random text!
+	#user->token(github_key)
 	#user->get('user',string)
 //	#user->objectdata
 	#user->result_location
