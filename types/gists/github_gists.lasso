@@ -58,15 +58,7 @@ define github_gists => type {
 				//repos for the specified user
 				#urlstring->insert('users')
 				#urlstring->insert(#user)
-				#urlstring->insert('gists')
-				
-//			else(#org->size)
-//				// repos for the org
-//				#urlstring->insert('orgs')
-//				#urlstring->insert(#org)
-//				#type->size && array('all', 'owner', 'member') >> #type ? #params->insert('type='+#type) 
-//				#sort->size && array('created', 'updated', 'pushed', 'full_name') >> #sort ? #params->insert('sort='+#sort) 
-//				#direction == 'desc' ? #params->insert('direction=desc') | #params->insert('direction=asc') 
+				#urlstring->insert('gists')				
 			else
 				// repos for the authenticated user or public if anon
 				#urlstring->insert('gists')
@@ -74,23 +66,10 @@ define github_gists => type {
 			// since here 
 			//#since->size ? #params->insert('since='+#since+'Z') 
 			
-
 			// run query
 			local(url = 'https://api.github.com/'+#urlstring->join('/')+(#params->size ? '?'+#params->join('&')))
 			.url = #url
-			local(resp = http_request(
-				.url,
-				-username=.u,
-				-password=.p,
-				-basicAuthOnly=true
-				)->response
-			)
-			local(res = json_deserialize(#resp->body->asString))
-			#res->isA(::map) ? .objectdata = array(#res) 
-			#res->isA(::array) ? .objectdata = #res
-			.headers = #resp->headers
-
-
+			..simple_get
 		}
 	}
 
