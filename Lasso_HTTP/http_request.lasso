@@ -131,7 +131,6 @@ define http_request => type {
         // Set cURL authentication options
         if(.username->size) => {
             #curl->set(CURLOPT_USERPWD, .username + ':' + .password)
-            log_critical(.username + ':' + .password)
             
             .basicAuthOnly
                 ? #curl->set(CURLOPT_HTTPAUTH, CURLAUTH_BASIC)
