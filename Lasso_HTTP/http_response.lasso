@@ -1,4 +1,3 @@
-[
 define http_response => type {
     data
         private headerBytes::bytes,
@@ -82,4 +81,3 @@ define http_response => type {
         .'statusMsg'  =  string(#message->get(3))
     }
 }
-]

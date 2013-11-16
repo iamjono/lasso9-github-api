@@ -1,4 +1,3 @@
-[
 define http_request => type {
     data
         private curl,
@@ -25,7 +24,7 @@ define http_request => type {
         public options
 
 
-    // Code adapted from include_url
+    public onCreate() => { .onCreate('') }
     public onCreate(
         url::string,
         -username::string='', 
@@ -125,11 +124,14 @@ define http_request => type {
         return http_response(.curl->result)
     }
 
+    // Code adapted from include_url
     private makeRequest => {
+        fail_if(.urlHostname == '', `No URL specified`)
+
         local(curl) = curl(.url)
 
         // Set cURL authentication options
-        if(.username->size) => {
+        if(.username != '') => {
             #curl->set(CURLOPT_USERPWD, .username + ':' + .password)
             
             .basicAuthOnly
@@ -193,4 +195,3 @@ define http_request => type {
         .`curl` = #curl
     }
 }
-]
