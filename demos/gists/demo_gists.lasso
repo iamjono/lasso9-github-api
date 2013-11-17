@@ -1,43 +1,27 @@
 [
-	sys_listunboundmethods !>> 'br' ? define br => '<br>'
-	define br => '<br>'
-	sys_listtraits !>> 'github_common' ? 
-		include('../../types/github_common.lasso')
-	
-	sys_listtypes !>> 'github_parent' ? 
-		include('../../types/github_parent.lasso')
-		
-	sys_listtypes !>> 'github_header' ? 
-		include('../../types/github_header.lasso')
-		
-		
-	include('../../types/gists/github_gists.lasso')
-	
+	// This should let us run this anywhere and still properly import the file
+	local(path_here) = currentCapture->callsite_file->stripLastComponent
+	not #path_here->beginsWith('/')? #path_here = io_file_getcwd + '/' + #path_here
+	not #path_here->endsWith('/')  ? #path_here->append('/')
 
+	not ::github->isType
+		? sourcefile(file(#path_here + `../helpers.lasso`), -autoCollect=false)->invoke
+
+	define br => '<br />'
 	
-	local(obj = github_gists)
+	
+	local(obj)   = github(`public`)
+	local(gists) = #obj->gists
 	
 	/* =======================================================
 	Get gists from a specified user
 	======================================================= */
 	'Get info about a specified users gists'+br
 //	#obj->get(-user='fletc3her')
-	#obj->list(-user='iamjono')
+	local(result) = #gists->list('iamjono')
 	// use for troubleshooting
 	//#obj->url
 	//br
 	// output the whole array for debug
-	'<pre>'+#obj->objectdata+'</pre>'
-	
-//	br+'full_name: '+#repos->repos_full_name
-	loop(#obj->size) => {^
-		br+br+loop_count+': description: '+#obj->description(loop_count)
-		with k in #obj->objectdata->first->keys
-		where #k != 'description'
-		do => {^
-			br+'&nbsp;&nbsp;&nbsp;&nbsp;'+#k+': '+#obj->getobjectdata(#k,loop_count)
-		^}
-	^}
-
-	
+	'<pre>'+#result->objectData+'</pre>'
 ]
