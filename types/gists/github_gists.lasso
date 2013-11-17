@@ -17,9 +17,8 @@
 		Delete a gist
 ======================================================================= */
 define github_gists => type {
-	parent github_parent
 	data
-		public objectdata::array		= array
+		public request::http_request    = http_request
 
 	/* =================================================================================================
 	List gists
@@ -47,32 +46,29 @@ define github_gists => type {
 			Optional string of a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ Only gists updated at 
 			or after this time are returned.
 	================================================================================================= */
+	public list(user::string, -since=void) => {
+		.request->urlPath = `/users/` + #user + `/gists`
+
+		#since->isA(::date)
+			? .request->getParams = (:#since->format(`yyyy-MM-ddHH:mm:ssZ`))
+		return .request
+	}
 	public list(
-		-user::string		= '',
-		-since::string		= ''
-		) => {
-		protect => {
-			handle_error => { return error_msg+'<pre>'+error_stack+'</pre>' }
-			local(urlstring = array, params = array)
-			if(#user->size) => {
-				//repos for the specified user
-				#urlstring->insert('users')
-				#urlstring->insert(#user)
-				#urlstring->insert('gists')				
-			else
-				// repos for the authenticated user or public if anon
-				#urlstring->insert('gists')
-			}
-			// since here 
-			//#since->size ? #params->insert('since='+#since+'Z') 
-			
-			// run query
-			local(url = 'https://api.github.com/'+#urlstring->join('/')+(#params->size ? '?'+#params->join('&')))
-			.url = #url
-			..simple_get
-		}
+		-public ::boolean=false,
+		-starred::boolean=false,
+		-since=void
+	) => {
+		#public
+			? .request->urlPath = `/gists/public`
+		| #starred
+			? .request->urlPath = `/gists/starred`
+		| .request->urlPath = `/gists`
+
+		#since->isA(::date)
+			? .request->getParams = (:#since->format(`yyyy-MM-ddHH:mm:ssZ`))
+
+		return .request
 	}
 
-	
 }
 ]
