@@ -28,7 +28,8 @@ define github => type {
         -username::string=``,
         -password::string=``,
         -clientID::string='',
-        -clientSecret::string=''
+        -clientSecret::string='',
+        -token::string=''
     ) => {
         ._validAuthTypes !>> #authType
             ? fail(
@@ -42,6 +43,7 @@ define github => type {
         ._password     = #password
         ._clientID     = #clientID
         ._clientSecret = #clientSecret
+        #token->size ? .token(#token)
     }
 
     /**!
@@ -91,4 +93,10 @@ define github => type {
 
         return #req
     }
+	public token(u::string) => {
+		if(#u->size) => {
+			._username = #u 
+			._password = 'x-oauth-basic'
+		}
+	}
 }

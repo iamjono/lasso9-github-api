@@ -1,31 +1,21 @@
 [
 define github_user => type {
-	parent github_parent
 	data
-		protected prefix::string	= 'user_',
-		public objectdata::map		= map
+		protected prefix::string		= 'user_',
+		public request::http_request    = http_request,
+		public objectdata::map			= map
 
 	// standard get method
 	public get(method::string,user::string) => {
-		protect => {
-			handle_error => { return error_msg }
-			local(urlstring = array)
-			#method->size ? #urlstring->insert(#method)
-			#user->size ? #urlstring->insert(#user)
-			#user->size ? .user = #user
-			
-			// run query
-			local(resp = http_request(
-				'https://api.github.com/'+#urlstring->join('/'),
-				-username=.u,
-				-password=.p,
-				-basicAuthOnly=true
-				)->response
-			)
-			.objectdata = json_deserialize(#resp->body->asString)
-			.headers = #resp->headers
-
-		}
+	
+		// assemble url
+		local(urlstring = array)
+		#method->size ? #urlstring->insert(#method)
+		#user->size ? #urlstring->insert(#user)
+		
+		// make and return request
+		.request->urlPath = '/'+#urlstring->join('/')
+		return .request
 	}
 	
 	public update(
@@ -54,21 +44,11 @@ define github_user => type {
 		Push the PATCH via JSON and get the new data
 		can't use .run because of custom...
 		=========================================================== */
-		
-		// run query
-		local(resp = http_request(
-			'https://api.github.com/user',
-			-username=.u,
-			-password=.p,
-			-basicAuthOnly=true,
-			-postParams=json_serialize(#outmap),
-			-reqMethod='PATCH'
-			)->response
-		)
-		.objectdata = json_deserialize(#resp->body->asString)
-		.headers = #resp->headers
-
-		
+		// make and return request
+		.request->postParams = json_serialize(#outmap)
+		.request->method='PATCH'
+		.request->urlPath = '/user'
+		return .request
 	}
 	
 }
