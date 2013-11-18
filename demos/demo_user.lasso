@@ -1,48 +1,51 @@
 [
-	define br => '<br>'
-	sys_listtraits !>> 'github_common' ? include('../types/github_common.lasso')
-//	sys_listtypes !>> 'github_user' ? 
-		include('../types/github_user.lasso')
+	// loades key. should be placed in the webroot, or however you wish!
+	sys_listUnboundMethods !>> 'github_key' ? include('/github_key.lasso')
+	
+	// uncomment to force reload
+	//include('../types/main/github_user.lasso')
 	
 
-	
 	
 	/* =======================================================
 	Get info about a user
 	======================================================= */
-	local(user = github_user)
+	local(obj)   = github('public')
+	local(user) = #obj->user
+		
 	'Get info about a user'+br
-	#user->get('users','iamjono')
-	'blog: '+#user->result_blog	
+	local(result) = #user->get('users','iamjono')->response
+	'blog: '+#result->blog	
 
+	
 	br
 	br
 	/* =======================================================
 	Get the authenticated user
 	======================================================= */
-	local(user = github_user)
-	'Get the authenticated user'+br
+	local(obj)   = github('basic')
+	local(user) = #obj->user
 	#user->token(github_key)
-	#user->get('user',string)
-//	#user->objectdata
-	#user->result_location
-
+	
+	'Get the authenticated user'+br
+	local(result) = #user->get('user',string)->response
+	#result->location
+	
+	
 	br
 	br
 	/* =======================================================
 	Update a user property
 	======================================================= */
-	local(user = github_user)
-	'Update a user property'+br
-	#user->token(github_key) // not the token BTW, it's random text!
-	#user->update(-location='Newmarket, Canada')
-//	#user->objectdata
-	#user->result_location
+	local(obj)   = github('basic')
+	local(user) = #obj->user
+	#user->token(github_key)
 	
+	'Update a user property'+br
+	local(result) = #user->update(-location='Newmarket, Canada')->response
+	#result->location
+	// useful for debug
+//	'<pre>'+#result->objectData+'</pre>'
 
-	br
-	br
-	'Headers:'+br
-	#user->headers
 	
 ]

@@ -1,86 +1,69 @@
 [
-	define br => '<br>'
-	sys_listtraits !>> 'github_common' ? 
-		include('../types/github_common.lasso')
+	// loades key. should be placed in the webroot, or however you wish!
+	sys_listUnboundMethods !>> 'github_key' ? include('/github_key.lasso')
 	
-	sys_listtypes !>> 'github_parent' ? 
-		include('../types/github_parent.lasso')
-		
-	sys_listtypes !>> 'github_header' ? 
-		include('../types/github_header.lasso')
-		
-	sys_listtypes !>> 'github_user' ? 
-		include('../types/github_user.lasso')
+	// uncomment to force reload
+	include('../types/main/github_repos.lasso')
 	
-//	sys_listtypes !>> 'github_repos' ? 
-		include('../types/github_repos.lasso')
 	
 
 	
-	local(repos = github_repos)
+	local(obj)   = github('public')
+	local(repos) = #obj->repos
 	
 	/* =======================================================
 	Get info about a specified user
 	======================================================= */
 	'Get info about a specified users repos'+br
 //	#repos->get(-user='fletc3her')
-	#repos->get(-user='zeroloop',-sort='created')
+//	local(result) = #repos->get(-user='fletc3her')->response
+	local(result) = #repos->get(-user='zeroloop',-sort='created')->response
 	// use for troubleshooting
-	#repos->url
-	br
+	#result->url
+//	br
 	// output the whole array for debug
-	'<pre>'+#repos->objectdata+'</pre>'
+//	'<pre>'+#result->objectdata+'</pre>'
 	
-	br+'full_name: '+#repos->repos_full_name
-	loop(#repos->size) => {^
-		br+loop_count+': full_name: '+#repos->repos_full_name(loop_count)
+	br+'full_name: '+#result->full_name
+	loop(#result->size) => {^
+		br+loop_count+': full_name: '+#result->full_name(loop_count)
 	^}
 
 	/* =======================================================
 	Get the authenticated user
 	======================================================= */
+	local(obj)   = github('basic')
+	local(repos) = #obj->repos
+	#repos->token(github_key)
+
 	br+br+'Get the authenticated users repos'
-	#repos->token('5ea2f6263ba7364cb187ae677f3647f4a10b7e74') // not the token BTW, it's random text!
-	#repos->get
-	br+'url: '+#repos->url
-	br+'# repos: '+#repos->size
-	br+'default, first full_name: '+#repos->result_full_name
+	local(result) = #repos->get(-thisuser)->response
+	br+'# repos: '+#result->size
+	br+'default, first full_name: '+#result->full_name
 	br
 	
-	loop(#repos->size) => {^
-		br+loop_count+': full_name: '+#repos->result_full_name(loop_count)
+	loop(#result->size) => {^
+		br+loop_count+': full_name: '+#result->full_name(loop_count)
 	^}
 
 	/* =======================================================
 	Get repos for an org
 	======================================================= */
+	local(obj)   = github('basic')
+	local(repos) = #obj->repos
+	#repos->token(github_key)
+	local(result) = #repos->get(-org='LassoSoft')->response
+	
 	br+br+'Get repos for an org'
-	br+'Org:'+br
-	#repos->get(-org='LassoSoft')
-	br+'url: '+#repos->url
-	br+br+br+'# repos: '+#repos->size
-	br+'default, first full_name: '+#repos->result_full_name
+	br+'Org:'+#result->owner->find('login')+br
+	
+	br+'url: '+#result->url
+	br+br+br+'# repos: '+#result->size
+	br+'default, first full_name: '+#result->full_name
 	br
 	
-	loop(#repos->size) => {^
-		br+loop_count+': full_name: '+#repos->result_full_name(loop_count)
+	loop(#result->size) => {^
+		br+loop_count+': full_name: '+#result->full_name(loop_count)
 	^}
-//	
-//	
-//	/* =======================================================
-//	Update a user property
-//	======================================================= */
-////	'Update a user property'+br
-////	#user->token('5ea2f6263ba7364cb187ae677f3647f4a10b7e74') // not the token BTW, it's random text!
-////	#user->update(-location='Newmarket, Canada')
-////	#user->user_location
-//	
-//
-	br
-	br
-	'Headers:'+br
-	#repos->headers
-	br+br
-//	'X-RateLimit-Remaining = ' + #repos->headers->'X-RateLimit-Remaining'
-	
+
 ]
