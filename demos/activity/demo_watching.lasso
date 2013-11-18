@@ -118,9 +118,6 @@
 	#hub->token(github_key)
 	
 	local(result) = #hub->delete_subscription(-owner='bfad',-repo='lspec')->response
-	#result->statusCode
-	#result->headers
-	// output the whole array for debug
-//	'<pre>'+#result->objectdata+'</pre>'
+	#result->response->statusCode
 
 ]
