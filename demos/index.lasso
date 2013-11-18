@@ -13,7 +13,7 @@
 	<li>Event Types</li>
 	<li>Feeds</li>
 	<li>Notifications</li>
-	<li>Starring</li>
+	<li><a href="activity/demo_starring.lasso">Starring</a></li>
 	<li><a href="activity/demo_watching.lasso">Watching</a></li>
 </ul>
 <h3>Gists</h3>
