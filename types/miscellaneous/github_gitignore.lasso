@@ -11,9 +11,9 @@
 	GitHub .gitignore repository.
 ======================================================================= */
 define github_gitignore => type {
-	parent github_parent
 	data
-		public objectdata::map		= map
+		public request::http_request    = http_request,
+		public objectdata::map			= map
 
 	/* ================================================================
 	Listing available templates
@@ -21,22 +21,8 @@ define github_gitignore => type {
 		GET /gitignore/templates
 	================================================================ */
 	public list() => {
-		protect => {
-			handle_error => { return error_msg }
-						
-			// run query
-			local(resp = http_request(
-				'https://api.github.com/gitignore/templates',
-				-username=.u,
-				-password=.p,
-				-basicAuthOnly=true
-				)->response
-			)
-			.objectdata->insert('templates' = json_deserialize(#resp->body->asString))
-			.headers = #resp->headers
-
-			
-		}
+		.request->urlPath = '/gitignore/templates'
+		return .request
 	}
 	/* ================================================================
 	Get a single template
@@ -44,22 +30,8 @@ define github_gitignore => type {
 		GET /gitignore/templates/C
 	================================================================ */
 	public get(template::string) => {
-		protect => {
-			handle_error => { return error_msg }
-			// run query
-			local(resp = http_request(
-				'https://api.github.com/gitignore/templates/'+#template,
-				-username=.u,
-				-password=.p,
-				-basicAuthOnly=true
-				)->response
-			)
-			.objectdata = json_deserialize(#resp->body->asString)
-			.headers = #resp->headers
-
-			
-			
-		}
+		.request->urlPath = '/gitignore/templates/'+#template
+		return .request
 	}
 }
 ]
