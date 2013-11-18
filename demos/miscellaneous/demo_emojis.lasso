@@ -1,18 +1,17 @@
 [
-	sys_listunboundmethods !>> 'br' ? define br => '<br>'
-	sys_listtraits !>> 'github_common' ? include('../../types/github_common.lasso')
 //	sys_listtypes !>> 'github_emojis' ? 
 		include('../../types/miscellaneous/github_emojis.lasso')
 	
 
 	
-	local(obj = github_emojis)
+	local(obj)   = github('public')
+	local(emojis) = #obj->emojis
+	local(result) = #emojis->get->response
 	
 	/* =======================================================
 	Get emojis
 	======================================================= */
 	'Get emojis'+br
-	#obj->get
 	//'objectdata: '+#obj->objectdata	
 ]
 <table>
@@ -24,22 +23,12 @@
 		</tr>
 	</thead>
 	<tbody>
-[with i in #obj->objectdata->keys do => {^]
+[with i in #result->objectdata->keys do => {^]
 		<tr>
 			<td>[#i]</td>
-			<td><img src="[#obj->objectdata->find(#i)]"></td>
-			<td>[#obj->objectdata->find(#i)]</td>
+			<td><img src="[#result->objectdata->find(#i)]"></td>
+			<td>[#result->objectdata->find(#i)]</td>
 		</tr>
 [^}]
 	</tbody>
 </table>
-[
-
-	
-
-	br
-	br
-	'Headers:'+br
-	#obj->headers
-	
-]
