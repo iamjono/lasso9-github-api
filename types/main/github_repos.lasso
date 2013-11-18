@@ -42,27 +42,6 @@ define github_repos => type {
 			// make and return request
 			.request->urlPath = '/'+#urlstring->join('/')+'/repos'+(#params->size ? '?'+#params->join('&'))
 			return .request
-
-			
-						
-			// run query
-//			local(url = 'https://api.github.com/'+#urlstring->join('/')+'/repos'+(#params->size ? '?'+#params->join('&')))
-//			.url = #url
-//			local(resp = http_request(
-//				.url,
-//				-username=.u,
-//				-password=.p,
-//				-basicAuthOnly=true
-//				)->response
-//			)
-//			local(res = json_deserialize(#resp->body->asString))
-//			#res->isA(::map) ? .objectdata = array(#res) 
-//			#res->isA(::array) ? .objectdata = #res
-//
-//			.headers = #resp->headers
-
-			
-			
 		}
 	}
 	
@@ -127,40 +106,12 @@ define github_repos => type {
 		Push the PATCH via JSON and get the new data
 		can't use .run because of custom...
 		=========================================================== */
-//		#org->size ? local(r = curl('https://api.github.com/orgs/'+#org+'/repos')) | local(r = curl('https://api.github.com/user/repos'))
-//		.u->size ? #r->set(CURLOPT_USERPWD, .u+':'+.p)
-//		#r->set(CURLOPT_POSTFIELDS, json_serialize(#outmap))
-//		local(res = json_deserialize(#r->result))
-//		#res->isA(::map) ? .objectdata = array(#res) 
-//		#res->isA(::array) ? .objectdata = #res
-//		.headers->process(#r->header)
-
-
 		// make and return request
 		#org->size ?
 			.request->urlPath = '/orgs/'+#org+'/repos' | 
 			.request->urlPath = '/user/repos'
 		.request->postParams = json_serialize(#outmap)
 		return .request
-
-		
-//		#org->size ? .url = 'https://api.github.com/orgs/'+#org+'/repos' | .url = 'https://api.github.com/user/repos'
-//		// run query
-//		local(resp = http_request(
-//			.url,
-//			-username=.u,
-//			-password=.p,
-//			-basicAuthOnly=true,
-//			-postParams=json_serialize(#outmap)
-//			)->response
-//		)
-//		local(res = json_deserialize(#resp->body->asString))
-//		#res->isA(::map) ? .objectdata = array(#res) 
-//		#res->isA(::array) ? .objectdata = #res
-//
-//		.headers = #resp->headers
-		
-		
 	} // end create
 	
 	/* ===============================
@@ -181,22 +132,6 @@ define github_repos => type {
 			// make and return request
 			.request->urlPath = '/'+#urlstring->join('/')
 			return .request
-			
-			// run query
-//			local(url = 'https://api.github.com/'+#urlstring->join('/'))
-//			.url = #url
-//			local(resp = http_request(
-//				.url,
-//				-username=.u,
-//				-password=.p,
-//				-basicAuthOnly=true
-//				)->response
-//			)
-//			local(res = json_deserialize(#resp->body->asString))
-//			#res->isA(::map) ? .objectdata = array(#res) 
-//			#res->isA(::array) ? .objectdata = #res
-//
-//			.headers = #resp->headers
 		}
 	}
 
@@ -251,26 +186,6 @@ define github_repos => type {
 		.request->urlPath = '/'+#urlstring->join('/')
 		.request->postParams = json_serialize(#outmap)
 		return .request
-
-		
-		
-		// run query
-//		local(url = 'https://api.github.com/'+#urlstring->join('/'))
-//		.url = #url
-//		local(resp = http_request(
-//			.url,
-//			-username=.u,
-//			-password=.p,
-//			-basicAuthOnly=true,
-//			-postParams=json_serialize(#outmap),
-//			-reqMethod='PATCH'
-//			)->response
-//		)
-//		.objectdata = json_deserialize(#resp->body->asString)
-//		.headers = #resp->headers
-
-		
-		
 	}
 
 	private lists(urlstring::array, params::array) => {
@@ -393,18 +308,5 @@ define github_repos => type {
 			
 		}
 	}
-	// allows lookups by property directly
-//	public _unknownTag(...) => {
-//		local(n = method_name->asString)
-//		local(num = 1)
-//		if(#rest->isNotA(::void)) => {
-//			protect => {
-//				#num = #rest->first
-//			}	
-//		}
-//		return .getobjectdata(#n,#num)
-//	}
-
-	
 }
 ]
