@@ -1,7 +1,7 @@
 <h1>Lasso 9 GitHub Clent API Demos</h1>
 <h3>Users</h3>
 <ul>
-	<li><a href="demo_users.lasso">Users</a></li>
+	<li><a href="demo_user.lasso">Users</a></li>
 </ul>
 <h3>Repos</h3>
 <ul>
