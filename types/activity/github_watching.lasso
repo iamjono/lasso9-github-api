@@ -22,9 +22,8 @@
 		Stop watching a repository (LEGACY)
 ======================================================================= */
 define github_watching => type {
-	parent github_parent
 	data
-		protected prefix::string		= 'watching_',
+		public request::http_request    = http_request,
 		public objectdata::array		= array
 
 

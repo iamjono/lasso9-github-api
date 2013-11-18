@@ -3,8 +3,8 @@
 	Skeleton
 ======================================================================= */
 define github_references => type {
-	parent github_parent
 	data
+		public request::http_request    = http_request,
 		public objectdata::array		= array
 }
 ]

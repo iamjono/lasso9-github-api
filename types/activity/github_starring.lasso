@@ -20,8 +20,8 @@
 		Unstar a repository
 ======================================================================= */
 define github_starring => type {
-	parent github_parent
 	data
+		public request::http_request    = http_request,
 		public objectdata::array		= array
 
 

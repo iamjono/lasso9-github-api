@@ -6,8 +6,8 @@
 	The Feeds API lists all the feeds available to the authenticating user
 ======================================================================= */
 define github_feeds => type {
-	parent github_parent
 	data
+		public request::http_request    = http_request,
 		public objectdata::array		= array
 
 	

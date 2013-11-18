@@ -30,8 +30,8 @@
 	In times of high server load, the time may increase. Please obey the header.
 ======================================================================= */
 define github_notifications => type {
-	parent github_parent
 	data
+		public request::http_request    = http_request,
 		public objectdata::array		= array
 
 	
