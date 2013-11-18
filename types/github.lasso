@@ -77,7 +77,7 @@ define github => type {
     public _prepareRequest(req::http_request)::http_request => {
         local(headers) = array
 
-        // Should ahve a path, let's fill in the URL
+        // Should have a path, let's fill in the URL
         #req->url  = ._apiURL(#req->urlPath)
 
         // Docs say you *must* have an user agent
