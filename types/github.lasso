@@ -65,7 +65,7 @@ define github => type {
         // The method is being called on the _reqObject and should return an http_request
         local(req) = ._prepareRequest(._reqObject->\(method_name)->invoke(:#rest))
 
-        return github_result(#req->response)
+        return github_request(#req)
     }
     
     private _apiURL(path::string) => ._apiURL + #path

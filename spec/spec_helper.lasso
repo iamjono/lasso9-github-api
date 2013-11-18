@@ -7,6 +7,7 @@ if(not var_defined('_gh_loaded')) => {
             `../Lasso_HTTP/http_request.lasso`,
             `../Lasso_HTTP/http_response.lasso`,
             `../types/github.lasso`,
+            `../types/github_request.lasso`,
             `../types/github_result.lasso`,
             `../types/gists/github_gists.lasso`
         )

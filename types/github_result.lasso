@@ -12,4 +12,6 @@ define github_result => type {
         .response   = #response
         .objectData = json_deserialize(#response->bodyString)
     }
+
+    public headers => .response->headers
 }

@@ -15,7 +15,7 @@ describe(`-> gists`) => {
         expect(::github_gists, #gh->_reqObject->type)
     }
     it(`Allows for listing a specified user's gists`) => {
-        local(gists) = github(`public`)->gists->list('bfad')
+        local(gists) = github(`public`)->gists->list('bfad')->response
 
         expect(#gists->objectData->size > 0)
     }

@@ -18,7 +18,7 @@
 	======================================================= */
 	'Get info about a specified users gists'+br
 //	#obj->get(-user='fletc3her')
-	local(result) = #gists->list('iamjono')
+	local(result) = #gists->list('iamjono')->response
 	// use for troubleshooting
 	//#obj->url
 	//br
