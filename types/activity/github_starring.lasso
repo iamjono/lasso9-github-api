@@ -25,6 +25,93 @@ define github_starring => type {
 		public objectdata::array		= array
 
 
+		
+	/* =======================================================
+	List Stargazers
+		GET /repos/:owner/:repo/stargazers
+			# Legacy, using github.beta media type.
+			GET /repos/:owner/:repo/watchers
+	======================================================= */
+	public stargazers(
+		-owner::string,
+		-repo::string
+		) => {
+		local(urlstring = array, params = array)
+		#urlstring->insert('repos')
+		#urlstring->insert(#owner)			
+		#urlstring->insert(#repo)			
+		#urlstring->insert('stargazers')
+
+		.request->urlPath = '/'+#urlstring->join('/')
+		return .request
+	}
+	/* =======================================================
+	List repositories being starred
+		List repositories being starred by a user.
+		GET /users/:user/starred
+			# Legacy, using github.beta media type.
+			GET /users/:user/watched
+	======================================================= */
+	public starred(
+		-user::string		= '',
+		-sort::string		= '',
+		-direction::string	= ''
+		) => {
+		local(urlstring = array, params = array)
+		#user->size ? #urlstring->insert('users') | #urlstring->insert('user')
+		#user->size ? #urlstring->insert(#user)			
+		#urlstring->insert('starred')
+
+		array('created', 'updated') >> #sort ? #params->insert('sort='+#sort) 
+		#direction == 'desc' ? #params->insert('direction=desc') | #params->insert('direction=asc') 
+
+		.request->urlPath = '/'+#urlstring->join('/')+(#params->size ? '?'+#params->join('&'))
+		return .request
+	}
+	private getstar(url::string,method::string='') => {
+		.request->urlPath = #url
+		#method->size ? .request->method=#method
+		return .request
+	}
+	/* =======================================================
+	Check if you are starring a repository
+		Requires for the user to be authenticated.
+	======================================================= */
+	public check(
+		-owner::string,
+		-repo::string
+		) => {
+		local(stat = .getstar('/user/starred/'+#owner+'/'+#repo,string)->asCopy->response)
+		local(code = #stat->response->statusCode)
+		#code == 200 || #code == 204 ? return true
+		return false
+	}
 	
+	/* =======================================================
+	Star a repository
+		Requires for the user to be authenticated.
+	======================================================= */
+	public star(
+		-owner::string,
+		-repo::string
+		) => {
+		.request->urlPath = '/user/starred/'+#owner+'/'+#repo
+		.request->method='PUT'
+		local(stat = .request->asString)
+		return true
+	}
+	/* =======================================================
+	UNStar a repository
+		Requires for the user to be authenticated.
+	======================================================= */
+	public unstar(
+		-owner::string		= '',
+		-repo::string		= ''
+		) => {		
+		.request->urlPath = '/user/starred/'+#owner+'/'+#repo
+		.request->method='DELETE'
+		local(stat = .request->asString)
+		return false
+	}
 }
 ]
