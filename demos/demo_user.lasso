@@ -1,5 +1,5 @@
 [
-	// loades key. should be placed in the webroot, or however you wish!
+	// loads key. should be placed in the webroot, or however you wish!
 	sys_listUnboundMethods !>> 'github_key' ? include('/github_key.lasso')
 	
 	// uncomment to force reload
