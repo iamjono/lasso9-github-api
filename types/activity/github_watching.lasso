@@ -17,9 +17,6 @@
 		Get a Repository Subscription
 		Set a Repository Subscription
 		Delete a Repository Subscription
-		Check if you are watching a repository (LEGACY)
-		Watch a repository (LEGACY)
-		Stop watching a repository (LEGACY)
 ======================================================================= */
 define github_watching => type {
 	data
@@ -36,19 +33,14 @@ define github_watching => type {
 		-owner::string,
 		-repo::string
 		) => {
-		protect => {
-			handle_error => { return error_msg+'<pre>'+error_stack+'</pre>' }
-			local(urlstring = array, params = array)
-			#urlstring->insert('repos')
-			#urlstring->insert(#owner)			
-			#urlstring->insert(#repo)			
-			#urlstring->insert('subscribers')
+		local(urlstring = array, params = array)
+		#urlstring->insert('repos')
+		#urlstring->insert(#owner)			
+		#urlstring->insert(#repo)			
+		#urlstring->insert('subscribers')
 
-			// run query
-			local(url = 'https://api.github.com/'+#urlstring->join('/'))
-			.url = #url
-			..simple_get
-		}
+		.request->urlPath = '/'+#urlstring->join('/')
+		return .request
 	}
 	/* =======================================================
 	List repositories being watched
@@ -60,18 +52,13 @@ define github_watching => type {
 	public list_watching(
 		-user::string		= ''
 		) => {
-		protect => {
-			handle_error => { return error_msg+'<pre>'+error_stack+'</pre>' }
-			local(urlstring = array, params = array)
-			#user->size ? #urlstring->insert('users') | #urlstring->insert('user')
-			#user->size ? #urlstring->insert(#user)			
-			#urlstring->insert('subscriptions')
+		local(urlstring = array, params = array)
+		#user->size ? #urlstring->insert('users') | #urlstring->insert('user')
+		#user->size ? #urlstring->insert(#user)			
+		#urlstring->insert('subscriptions')
 
-			// run query
-			local(url = 'https://api.github.com/'+#urlstring->join('/'))
-			.url = #url
-			..simple_get
-		}
+		.request->urlPath = '/'+#urlstring->join('/')
+		return .request
 	}
 	/* =======================================================
 	Get a Repository Subscription
@@ -81,19 +68,8 @@ define github_watching => type {
 		-owner::string,
 		-repo::string
 		) => {
-		protect => {
-			handle_error => { return error_msg+'<pre>'+error_stack+'</pre>' }
-			local(urlstring = array, params = array)
-			#urlstring->insert('repos')
-			#urlstring->insert(#owner)			
-			#urlstring->insert(#repo)			
-			#urlstring->insert('subscription')
-
-			// run query
-			local(url = 'https://api.github.com/'+#urlstring->join('/'))
-			.url = #url
-			..simple_get
-		}
+		.request->urlPath = '/repos/'+#owner+'/'+#repo+'/subscription'
+		return .request
 	}
 	/* =======================================================
 	Set a Repository Subscription
@@ -109,34 +85,26 @@ define github_watching => type {
 		-subscribed::boolean = true,
 		-ignored::boolean = false
 		) => {
-		protect => {
-			handle_error => { return error_msg+'<pre>'+error_stack+'</pre>' }
-			local(urlstring = array, params = array)
-			#urlstring->insert('repos')
-			#urlstring->insert(#owner)			
-			#urlstring->insert(#repo)			
-			#urlstring->insert('subscription')
-
-			local(outmap = map)
-			#outmap->insert('subscribed' = #subscribed)
-			#outmap->insert('ignored' = #ignored)
-			.url = 'https://api.github.com/' + #urlstring->join('/')
-			// run query
-			local(resp = http_request(
-				.url,
-				-username=.u,
-				-password=.p,
-				-basicAuthOnly=true,
-				-postParams=json_serialize(#outmap),
-				-reqMethod='PUT'
-				)->response
-			)
-			local(res = json_deserialize(#resp->body->asString))
-			#res->isA(::map) ? .objectdata = array(#res) 
-			#res->isA(::array) ? .objectdata = #res
-			.headers = #resp->headers
-
-		}
+		local(outmap = map)
+		#outmap->insert('subscribed' = #subscribed)
+		#outmap->insert('ignored' = #ignored)
+		
+		.request->urlPath = '/repos/'+#owner+'/'+#repo+'/subscription'
+		.request->postParams = json_serialize(#outmap)
+		.request->method='PUT'
+		return .request
+	}
+	/* =======================================================
+	Delete a Repository Subscription
+		DELETE /repos/:owner/:repo/subscription
+	======================================================= */
+	public delete_subscription(
+		-owner::string		= '',
+		-repo::string		= ''
+		) => {		
+		.request->urlPath = '/repos/'+#owner+'/'+#repo+'/subscription'
+//		.request->method='DELETE'
+		return .request
 	}
 }
 ]

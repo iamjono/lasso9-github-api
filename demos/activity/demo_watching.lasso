@@ -1,12 +1,7 @@
 [
-	sys_listunboundmethods !>> 'br' ? define br => '<br>'
-	define br => '<br>'
-	sys_listtraits !>> 'github_common' ? include('../../types/github_common.lasso')
+	// loads key. should be placed in the webroot, or however you wish!
+	sys_listUnboundMethods !>> 'github_key' ? include('/github_key.lasso')
 	
-	sys_listtypes !>> 'github_parent' ? include('../../types/github_parent.lasso')
-		
-	sys_listtypes !>> 'github_header' ? include('../../types/github_header.lasso')
-		
 	// force reload of the type - comment out when not in dev
 	include('../../types/activity/github_watching.lasso')
 	
@@ -23,14 +18,16 @@
 	- url
 	======================================================= */
 	'List who is watching a specific repo:'+br
-	local(obj = github_watching)
-	#obj->list_watchers(-owner='iamjono',-repo='lasso9-github-api')
+	local(obj)   = github(`public`)
+	local(hub) = #obj->watching
+	local(result) = #hub->list_watchers(-owner='iamjono',-repo='lasso9-github-api')->response
+
 	// output the whole array for debug
 //	'<pre>'+#obj->objectdata+'</pre>'
 	
-	loop(#obj->size) => {^
+	loop(#result->size) => {^
 		br
-		loop_count+': watcher: '+#obj->watching_login(loop_count)
+		loop_count+': watcher: '+#result->login(loop_count)
 	^}
 
 	/* =======================================================
@@ -41,36 +38,41 @@
 	======================================================= */
 	
 	br+br+'List repositories being watched by a user:'
-	local(obj = github_watching)
-	#obj->list_watching(-user='bfad')
-	loop(#obj->size) => {^
+	local(obj)   = github(`public`)
+	local(hub) = #obj->watching
+	local(result) = #hub->list_watching(-user='bfad')->response
+
+	loop(#result->size) => {^
 		br
-		loop_count+': full_name: '+#obj->watching_full_name(loop_count)
+		loop_count+': full_name: '+#result->full_name(loop_count)
 	^}
 
 	br+br+'List repositories being watched by the authenticated user:'
-	local(obj = github_watching)
-	#obj->token(github_key)
-	#obj->list_watching
-	loop(#obj->size) => {^
+	local(obj)   = github('basic')
+	local(hub) = #obj->watching
+	#hub->token(github_key)
+	
+	local(result) = #hub->list_watching->response
+	loop(#result->size) => {^
 		br
-		loop_count+': full_name: '+#obj->watching_full_name(loop_count)
+		loop_count+': full_name: '+#result->full_name(loop_count)
 	^}
 
 	/* =======================================================
 	Get a Repository Subscription
 	props at http://developer.github.com/v3/activity/watching/#get-a-repository-subscription
-	
-	!!!!UPDATE: Even their example does not work.!!!!
 	======================================================= */
-	br+br+'Get a Repository Subscription for a user & repo:'
-	local(obj = github_watching)
-	#obj->token(github_key) // authenticated just make sure within rate limiting
-	#obj->get_subscription(-owner='bfad',-repo='lspec')
-	'<pre>'+#obj->objectdata+'</pre>'
-	'subscribed: '+#obj->watching_subscribed+br
-	'ignored: '+#obj->watching_ignored+br
-	'reason: '+#obj->watching_reason+br
+	br+br+'Get a Repository Subscription for a user & repo:'+br
+	
+	local(obj)   = github('basic')
+	local(hub) = #obj->watching
+	#hub->token(github_key)
+	
+	local(result) = #hub->get_subscription(-owner='bfad',-repo='lspec')->response
+
+	'subscribed: '+#result->subscribed+br
+	'ignored: '+#result->ignored+br
+	'reason: '+#result->reason+br
 	
 	/* =======================================================
 	Set a Repository Subscription
@@ -95,14 +97,30 @@
 			id = 3789179, location = Newmarket, Canada, login = iamjono, name = Jonathan Guthrie, organizations_url = https://api.github.com/users/iamjono/orgs, owned_private_repos = 0, plan = map(collaborators = 0, name = free, private_repos = 0, space = 307200), private_gists = 0, public_gists = 4, public_repos = 12, received_events_url = https://api.github.com/users/iamjono/received_events, repos_url = https://api.github.com/users/iamjono/repos, site_admin = false, starred_url = https://api.github.com/users/iamjono/starred{/owner}{/repo}, subscriptions_url = https://api.github.com/users/iamjono/subscriptions, total_private_repos = 0, type = User, updated_at = 2013-11-15T22:00:24Z, url = https://api.github.com/users/iamjono))
 
 		======================================================= */
-	br+br+'Set a Repository Subscription for a user & repo:'
-	local(obj = github_watching)
-	#obj->token(github_key) // authenticated just make sure within rate limiting
-	#obj->set_subscription(-owner='bfad',-repo='lspec',-subscribed=false,-ignored=false)
-	'<pre>URL: '+#obj->url+'</pre>'
-	'<pre>objectdata: '+#obj->objectdata+'</pre>'
-	'subscribed: '+#obj->watching_subscribed+br
-	'ignored: '+#obj->watching_ignored+br
-	'reason: '+#obj->watching_reason+br
+	br+br+'Set a Repository Subscription for a user & repo:'+br
+	local(obj)   = github('basic')
+	local(hub) = #obj->watching
+	#hub->token(github_key)
 	
+	local(result) = #hub->set_subscription(-owner='bfad',-repo='lspec',-subscribed=true,-ignored=false)->response
+
+	'<pre>URL: '+#result->url+'</pre>'
+	'subscribed: '+#result->subscribed+br
+	'ignored: '+#result->ignored+br
+	'reason: '+#result->reason+br
+
+	/* =======================================================
+	DELETE a Repository Subscription
+	======================================================= */
+	br+br+'Delete a Repository Subscription for a user & repo:'+br
+	local(obj)   = github('basic')
+	local(hub) = #obj->watching
+	#hub->token(github_key)
+	
+	local(result) = #hub->delete_subscription(-owner='bfad',-repo='lspec')->response
+	#result->statusCode
+	#result->headers
+	// output the whole array for debug
+//	'<pre>'+#result->objectdata+'</pre>'
+
 ]
