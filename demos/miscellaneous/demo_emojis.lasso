@@ -12,7 +12,6 @@
 	Get emojis
 	======================================================= */
 	'Get emojis'+br
-	//'objectdata: '+#obj->objectdata	
 ]
 <table>
 	<thead>
