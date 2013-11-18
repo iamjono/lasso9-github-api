@@ -22,16 +22,14 @@
 			Git servers at GitHub.
 ======================================================================= */
 define github_meta => type {
-	parent github_parent
 	data
-		public objectdata::map		= map
+		public request::http_request    = http_request,
+		public objectdata::map			= map
 	
-	public onCreate() => {
-		// run query
-		
-		local(resp = http_request('https://api.github.com/meta')->response)
-		.objectdata = json_deserialize(#resp->body->asString)
-		.headers = #resp->headers
+	public get() => {
+		.request->urlPath = '/meta'
+		return .request
+
 	}
 }
 ]

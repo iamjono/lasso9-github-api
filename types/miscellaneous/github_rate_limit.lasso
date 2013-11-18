@@ -3,8 +3,8 @@
 	Skeleton
 ======================================================================= */
 define github_rate_limit => type {
-	parent github_parent
 	data
-		public objectdata::array		= array
+		public request::http_request    = http_request,
+		public objectdata::map			= map
 }
 ]
