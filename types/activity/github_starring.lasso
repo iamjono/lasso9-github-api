@@ -79,7 +79,7 @@ define github_starring => type {
 		.request->urlPath = '/user/starred/'+#owner+'/'+#repo
 		return (:.request,
 			{
-				#1->statusCode == 204 || #1->statusCode == 204 ? return true
+				#1->statusCode == 204 ? return true
 				return false
 			}
 		)
