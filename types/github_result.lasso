@@ -15,6 +15,9 @@ define github_result => type {
 
     public headers => .response->headers
 	public statusCode => .response->statusCode
+	// to implement later:
+//	public pollInterval => .response->'X-Poll-Interval'
+//	public statusCode => .response->statusCode
     
 	public size() => { return .objectdata->size }
 	
