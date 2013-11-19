@@ -15,5 +15,13 @@ if(not var_defined('_gh_loaded')) => {
 
     define github->_reqObject => .`_reqObject`
 
+    define github_testHelper => type {
+        public gitRequest => http_request
+        public gitResult  => (: http_request, true)
+        public gitResultF => (: http_request, false)
+        public intValue   => (: http_request, {return 42})
+        public firstParam => (: http_request, {return #1->type})
+    }
+
     var(_gh_loaded) = true
 }

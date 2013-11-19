@@ -68,4 +68,33 @@ describe(::github) => {
             }
         }
     }
+
+    describe(`When ->_unknownTag calls a sub-type action`) => {
+        it(`returns a github_request when the action returns an http_request`) => {
+            local(result) = github(`public`)->testHelper->gitRequest
+
+            expect(::github_request, #result->type)
+        }
+        it(`returns a github_result when the action returns a staticarray wih true being the second param`) => {
+            local(result) = github(`public`)->testHelper->gitResult
+
+            expect(::github_result, #result->type)
+        }
+        it(`returns a github_result when the action returns a staticarray wih false being the second param`) => {
+            local(result) = github(`public`)->testHelper->gitResultF
+
+            expect(::github_request, #result->type)
+        }
+        it(`returns the value of executing a capture passed as the second parameter of the staticarray`) => {
+            local(result) = github(`public`)->testHelper->intValue
+
+            expect(::integer, #result->type)
+            expect(42       , #result)
+        }
+        it(`passes a github_result as the first parameter to the capture passed as the second parameter of the staticarray`) => {
+            local(result) = github(`public`)->testHelper->firstParam
+            
+            expect(::github_result, #result)
+        }
+    }
 }

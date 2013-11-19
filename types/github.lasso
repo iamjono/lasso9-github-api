@@ -65,11 +65,24 @@ define github => type {
         }
 
         // The method is being called on the _reqObject and should return an http_request
-        #rest->size ? 
-        	local(req) = ._prepareRequest(._reqObject->\(method_name)->invoke(:#rest)) |
-        	local(req) = ._prepareRequest(._reqObject->\(method_name)->invoke)
+        #rest->size
+        	? local(req) = ._reqObject->\(method_name)->invoke(:#rest)
+        	| local(req) = ._reqObject->\(method_name)->invoke
 
-        return github_request(#req)
+        // Could have gotten just an http_request object or a staticarray
+        #req->isA(::http_request)
+            ? return github_request(._prepareRequest(#req))
+
+        local(opt) = #req->second
+        #req = github_request(._prepareRequest(#req->first))
+
+        #opt === false
+            ? return #req
+        #opt === true
+            ? return #req->response
+
+        local(val) = #opt->invoke(#req->response)
+        return #val
     }
     
     private _apiURL(path::string) => ._apiURL + #path
