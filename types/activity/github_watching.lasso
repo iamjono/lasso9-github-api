@@ -103,7 +103,7 @@ define github_watching => type {
 		-repo::string		= ''
 		) => {		
 		.request->urlPath = '/repos/'+#owner+'/'+#repo+'/subscription'
-//		.request->method='DELETE'
+		.request->method='DELETE'
 		return .request
 	}
 }
