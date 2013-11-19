@@ -201,7 +201,7 @@ define github_notifications => type {
 		#ignored->isA(::boolean)
 			? #outmap->insert('ignored' = #ignored)
 		
-		.request->postParams = #outmap
+		.request->postParams = json_serialize(#outmap)
 			
 		return .request
 	}
