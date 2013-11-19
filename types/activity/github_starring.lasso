@@ -88,6 +88,11 @@ define github_starring => type {
 	/* =======================================================
 	Star a repository
 		Requires for the user to be authenticated.
+		PUT /user/starred/:owner/:repo
+		
+		NOTE: during dev there seems to be an http error 502 generated
+		Cannot see the reason for this, possible error at GitHub end.
+		Hence returning the request not the boolean, for debug.
 	======================================================= */
 	public star(
 		-owner::string,
@@ -95,11 +100,7 @@ define github_starring => type {
 		) => {
 		.request->urlPath = '/user/starred/'+#owner+'/'+#repo
 		.request->method='PUT'
-		return (:.request,
-			{
-				return true
-			}
-		)
+		return .request
 	}
 	/* =======================================================
 	UNStar a repository
@@ -111,11 +112,7 @@ define github_starring => type {
 		) => {		
 		.request->urlPath = '/user/starred/'+#owner+'/'+#repo
 		.request->method='DELETE'
-		return (:.request,
-			{
-				return false
-			}
-		)
+		return .request
 	}
 }
 ]
