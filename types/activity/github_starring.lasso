@@ -81,10 +81,13 @@ define github_starring => type {
 		-owner::string,
 		-repo::string
 		) => {
-		local(stat = .getstar('/user/starred/'+#owner+'/'+#repo,string)->asCopy->response)
-		local(code = #stat->response->statusCode)
-		#code == 200 || #code == 204 ? return true
-		return false
+		.request->urlPath = '/user/starred/'+#owner+'/'+#repo
+		return (:.request,
+			{
+				#1->statusCode == 204 || #1->statusCode == 204 ? return true
+				return false
+			}
+		)
 	}
 	
 	/* =======================================================
@@ -97,8 +100,11 @@ define github_starring => type {
 		) => {
 		.request->urlPath = '/user/starred/'+#owner+'/'+#repo
 		.request->method='PUT'
-		local(stat = .request->asString)
-		return true
+		return (:.request,
+			{
+				return true
+			}
+		)
 	}
 	/* =======================================================
 	UNStar a repository
@@ -110,8 +116,11 @@ define github_starring => type {
 		) => {		
 		.request->urlPath = '/user/starred/'+#owner+'/'+#repo
 		.request->method='DELETE'
-		local(stat = .request->asString)
-		return false
+		return (:.request,
+			{
+				return false
+			}
+		)
 	}
 }
 ]
