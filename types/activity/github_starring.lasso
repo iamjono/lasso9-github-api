@@ -68,11 +68,6 @@ define github_starring => type {
 		.request->urlPath = '/'+#urlstring->join('/')+(#params->size ? '?'+#params->join('&'))
 		return .request
 	}
-	private getstar(url::string,method::string='') => {
-		.request->urlPath = #url
-		#method->size ? .request->method=#method
-		return .request
-	}
 	/* =======================================================
 	Check if you are starring a repository
 		Requires for the user to be authenticated.
