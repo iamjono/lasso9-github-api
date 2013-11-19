@@ -48,7 +48,12 @@ define github_members => type {
 		-user::string
 		) => {
 		.request->urlPath = '/orgs/'+#org+'/members/'+#user
-		return .request // need to return 
+		return (:.request,
+			{
+				#1->statusCode == 204 ? return true
+				return false
+			}
+		)
 	}
 	/* =======================================================
 	Remove a member
@@ -62,7 +67,11 @@ define github_members => type {
 		) => {
 		.request->urlPath = '/orgs/'+#org+'/members/'+#user
 		.request->method='DELETE'
-		return .request // need to return 
+		return (:.request,
+			{
+				return true
+			}
+		)
 	}
 	/* =======================================================
 	Public members list
@@ -73,7 +82,7 @@ define github_members => type {
 		-org::string
 		) => {
 		.request->urlPath = '/orgs/'+#org+'/public_members'
-		return .request // need to return 
+		return .request
 	}
 	/* =======================================================
 	Check public membership
@@ -88,7 +97,12 @@ define github_members => type {
 		-user::string
 		) => {
 		.request->urlPath = '/orgs/'+#org+'/public_members/'+#user
-		return .request // need to return 
+		return (:.request,
+			{
+				#1->statusCode == 204 ? return true
+				return false
+			}
+		)
 	}
 	/* =======================================================
 	Publicize a user’s membership
@@ -101,7 +115,7 @@ define github_members => type {
 		) => {
 		.request->urlPath = '/orgs/'+#org+'/public_members/'+#user
 		.request->method='PUT'
-		return .request // need to return 
+		return .request
 	}
 	/* =======================================================
 	Conceal a user’s membership
@@ -113,7 +127,7 @@ define github_members => type {
 		) => {
 		.request->urlPath = '/orgs/'+#org+'/public_members/'+#user
 		.request->method='DELETE'
-		return .request // need to return 
+		return .request
 	}
 }
 ]
