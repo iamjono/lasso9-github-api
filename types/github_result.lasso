@@ -14,8 +14,10 @@ define github_result => type {
     }
 
     public headers => .response->headers
+	public statusCode => .response->statusCode
     
 	public size() => { return .objectdata->size }
+	
 			
 	// returns a formatted name/value pair for the properties
 	// useful for debug
