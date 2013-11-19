@@ -47,10 +47,10 @@ define github_gists => type {
 			or after this time are returned.
 	================================================================================================= */
 	public list(user::string, -since=void) => {
-		.request->urlPath = `/users/` + #user + `/gists`
+		.request->urlPath = '/users/' + #user + '/gists'
 
 		#since->isA(::date)
-			? .request->getParams = (:#since->format(`yyyy-MM-ddHH:mm:ssZ`))
+			? .request->getParams = (:#since->format('yyyy-MM-ddHH:mm:ssZ'))
 		return .request
 	}
 	public list(
@@ -59,13 +59,13 @@ define github_gists => type {
 		-since=void
 	) => {
 		#public
-			? .request->urlPath = `/gists/public`
+			? .request->urlPath = '/gists/public'
 		| #starred
-			? .request->urlPath = `/gists/starred`
-		| .request->urlPath = `/gists`
+			? .request->urlPath = '/gists/starred'
+		| .request->urlPath = '/gists'
 
 		#since->isA(::date)
-			? .request->getParams = (:#since->format(`yyyy-MM-ddHH:mm:ssZ`))
+			? .request->getParams = (:#since->format('yyyy-MM-ddHH:mm:ssZ'))
 
 		return .request
 	}
