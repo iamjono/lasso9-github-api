@@ -105,7 +105,9 @@ define github => type {
         case(`key_secret`)
             #req->getParams += (:`client_id`=._clientID, `client_secret`=._clientSecret)
         }
-
+        
+        #req->headers += #headers->asStaticArray
+        
         return #req
     }
 	public token(u::string) => {
