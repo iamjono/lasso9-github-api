@@ -23,8 +23,8 @@ define github_trees => type {
 		GET /repos/:owner/:repo/git/trees/:sha?recursive=1
 	======================================================= */
 	public get_recursive(-owner::string,-repo::string,-sha::string) => {
-		.request->urlPath = '/repos/'+#owner+'/'+#repo+'/git/trees/'+#sha
-		.request->getParams = 'recursive=1'
+		.request->urlPath = '/repos/'+#owner+'/'+#repo+'/git/trees/'+#sha+'?recursive=1'
+//		.request->getParams = 'recursive=1'
 		return .request
 	}
 	/* =======================================================

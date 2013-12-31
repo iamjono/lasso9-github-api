@@ -267,8 +267,9 @@ define github_repos => type {
 		) => {
 		protect => {
 			handle_error => { return error_msg+'<pre>'+error_stack+'</pre>' }
-			local(urlstring = array('repos',#owner,#repo,'branches'))			
-			.lists(#urlstring,array)
+			.request->urlPath = '/repos/'+#owner+'/'+#repo+'/branches'
+//			log_critical(.request->urlPath)
+			return .request
 		}
 	}
 	/* ===============================

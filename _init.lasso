@@ -13,9 +13,12 @@
 	lassoapp_include('types/main/github_user.lasso')
 	
 	// repos object
-	lassoapp_include('types/main/github_repos.lasso')
+	lassoapp_include('types/repos/github_repos.lasso')
 //	
 	local(
+		repos = array(
+			'github_contents'
+		),
 		activity = array(
 			'github_events',
 			'github_eventtypes',

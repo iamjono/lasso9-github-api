@@ -26,5 +26,16 @@
 	//#obj->url
 	//br
 	// output the whole array for debug
-	'<pre>'+#result->objectData+'</pre>'
+//	'<pre>'+#result->objectData+'</pre>'
+
+//	with i in #result->objectData do => {^
+//		'<pre>'
+//		with e in #i->keys do => {^
+//			#e+': '+#i->find(#e)+'\n'
+//		^}
+//		'</pre>'
+//	^}
+
+	local(gistlist = gh_gist->convert(#result->objectData))
+	#gistlist->size
 ]
