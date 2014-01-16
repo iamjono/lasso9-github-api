@@ -13,10 +13,11 @@
 	lassoapp_include('types/main/github_user.lasso')
 	
 	// repos object
-	lassoapp_include('types/repos/github_repos.lasso')
-//	
+	//lassoapp_include('types/repos/github_repos.lasso')
+
 	local(
 		repos = array(
+			'github_repos',
 			'github_contents'
 		),
 		activity = array(
@@ -63,6 +64,7 @@
 			'github_pulls'
 		)
 	)
+	with f in #repos do => { 			sys_listtypes !>> #f ? lassoapp_include('types/repos/'+#f+'.lasso') 		}
 	with f in #activity do => { 		sys_listtypes !>> #f ? lassoapp_include('types/activity/'+#f+'.lasso') 		}
 	with f in #gists do => { 			sys_listtypes !>> #f ? lassoapp_include('types/gists/'+#f+'.lasso') 			}
 	with f in #gitdata do => { 			sys_listtypes !>> #f ? lassoapp_include('types/gitdata/'+#f+'.lasso') 			}
