@@ -70,6 +70,12 @@ define github_gists => type {
 
 		return .request
 	}
+	
+	public get(id) => {
+		.request->urlPath = '/gists/' + #id->asString
+		return .request
+	}
+
 }
 
 /*
